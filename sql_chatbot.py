@@ -22,7 +22,7 @@ db.run("""
 """)
 
 ## llm, tools, memory, system_prompt
-model = ChatGroq(model="openai/gpt-oss-20b")
+model = ChatGroq(model="llama-3.3-70b-versatile")
 toolkit = SQLDatabaseToolkit(db=db, llm=model)
 tools = toolkit.get_tools()
 
@@ -58,7 +58,7 @@ def get_agent():
 agent = get_agent()
 
 
-st.subheader("Task Management Assistant - Manage your tasks with ease   ")
+st.subheader("📜 TaskBot - Manage Your Tasks")
 
 if "messages" not in st.session_state:
     st.session_state.messages = []
