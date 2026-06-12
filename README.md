@@ -1,66 +1,64 @@
-# SQL AI Chatbot — LangChain + SQLite
+# TaskBot — SQL AI Chatbot
 
-Talk to any SQLite database in plain English. Ask business questions, get answers — no SQL knowledge needed.
+A conversational task manager built with LangChain, LangGraph, and Groq's Llama 3.3 70B. Instead of clicking through forms, you talk to your task list in plain English — the agent translates your requests into SQL operations against a SQLite database.
+
+**Live demo:** [add your Streamlit link here]
 
 ## How it works
 
-```
-User types question in plain English
-     ↓
-LangChain SQLDatabaseChain
-     ↓
-GPT-4o converts question to SQL query
-     ↓
-Query runs against SQLite database
-     ↓
-Result converted back to natural language
-     ↓
-Answer returned to user
-```
+The app uses `create_agent` from LangChain with the `SQLDatabaseToolkit`, which gives the LLM a set of tools to inspect the database schema and run SQL queries. A system prompt constrains the agent to a single `tasks` table and defines the CRUD mapping (create → INSERT, list → SELECT, update status → UPDATE, remove → DELETE).
 
-## Example questions
+Conversation state is held in-memory per session using LangGraph's `InMemorySaver` checkpointer, so the agent remembers earlier messages in the same session (e.g. "mark that one as done" after listing tasks).
 
-```
-"How many tasks are due this week?"
-"Show me all employees in the engineering department"
-"What is the total count of completed tasks?"
-"Which employee has the most open tasks?"
+## Table schema
+
+```sql
+CREATE TABLE tasks (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    title TEXT NOT NULL,
+    description TEXT,
+    status TEXT CHECK (status IN ('pending', 'in_progress', 'completed')) DEFAULT 'pending',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 ```
 
-## Files
+## Example interactions
 
-| File | What it does |
-|------|-------------|
-| `sql_chatbot.py` | Main chatbot script |
-| `my_tasks.db` | Sample SQLite database (tasks) |
-| `employee_records.csv` | Sample data for testing |
-| `requirements.txt` | Dependencies |
+- "Add a task: finish the quarterly report, due by Friday"
+- "Show me all pending tasks"
+- "Mark task 3 as completed"
+- "What tasks are still in progress?"
 
 ## Tech stack
 
-- LangChain (SQLDatabaseChain)
-- OpenAI GPT-4o (natural language to SQL)
-- SQLite (database)
-- Python
+- **LLM**: Llama 3.3 70B via Groq API
+- **Agent framework**: LangChain `create_agent` + LangGraph checkpointing
+- **Database**: SQLite, accessed via `SQLDatabaseToolkit`
+- **UI**: Streamlit
 
-## Setup
+## Running locally
 
 ```bash
+git clone https://github.com/Saiajaykumar12/sql-ai-chatbot-langchain.git
+cd sql-ai-chatbot-langchain
 pip install -r requirements.txt
 ```
 
-Create `.env`:
-```
-OPENAI_API_KEY=your_key
-```
-
+Create a `.env` file with:
+GROQ_API_KEY=your_key_here
+Run:
 ```bash
-python sql_chatbot.py
+streamlit run main.py
 ```
 
-Point it at any SQLite database by changing the `db_path` variable in `sql_chatbot.py`.
+## Notes
 
-## Related projects
+- The database file is created automatically on first run via `CREATE TABLE IF NOT EXISTS`.
+- On hosted demos (e.g. Streamlit Cloud), the SQLite file is ephemeral and resets on redeploy — this is a demo limitation, not a bug.
+- Conversation memory is per-session and in-memory; it does not persist across app restarts.
 
-- [RAG PDF Chatbot](https://github.com/Saiajaykumar12/langchain-rag-pdf-chatbot) — same natural language interface for documents
-- [LangGraph Agentic RAG](https://github.com/Saiajaykumar12/langgraph-agentic-rag) — adds autonomous reasoning on top
+## Possible extensions
+
+- Add a guardrail layer to restrict destructive SQL (DROP, unscoped DELETE/UPDATE) before execution
+- Move to a persistent database (Postgres) for multi-session continuity
+- Add user authentication so each user has their own task list
