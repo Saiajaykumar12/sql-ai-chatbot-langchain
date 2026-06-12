@@ -31,7 +31,7 @@ CREATE TABLE tasks (
 
 ## Tech stack
 
-- **LLM**: Llama 3.3 70B via Groq API
+- **LLM**: llama-3.1-8b-instant via Groq API
 - **Agent framework**: LangChain `create_agent` + LangGraph checkpointing
 - **Database**: SQLite, accessed via `SQLDatabaseToolkit`
 - **UI**: Streamlit
