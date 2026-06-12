@@ -22,7 +22,7 @@ db.run("""
 """)
 
 ## llm, tools, memory, system_prompt
-model = ChatGroq(model="llama-3.3-70b-versatile")
+model = ChatGroq(model="llama-3.1-8b-instant")
 toolkit = SQLDatabaseToolkit(db=db, llm=model)
 tools = toolkit.get_tools()
 
