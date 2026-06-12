@@ -2,7 +2,7 @@
 
 A conversational task manager built with LangChain, LangGraph, and Groq's Llama 3.3 70B. Instead of clicking through forms, you talk to your task list in plain English — the agent translates your requests into SQL operations against a SQLite database.
 
-**Live demo:** [add your Streamlit link here]
+**Live demo:** [https://sql-ai-chatbot-langchain-52ozqkhbv84gn63nqgrdvg.streamlit.app/]
 
 ## How it works
 
