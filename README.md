@@ -62,3 +62,8 @@ streamlit run main.py
 - Add a guardrail layer to restrict destructive SQL (DROP, unscoped DELETE/UPDATE) before execution
 - Move to a persistent database (Postgres) for multi-session continuity
 - Add user authentication so each user has their own task list
+
+# Demo
+![sql-ai-chatbot-langchain](https://github.com/Saiajaykumar12/sql-ai-chatbot-langchain/blob/main/sql%201.png)
+![sql-ai-chatbot-langchain](https://github.com/Saiajaykumar12/sql-ai-chatbot-langchain/blob/main/sql%202.png)
+![sql-ai-chatbot-langchain](https://github.com/Saiajaykumar12/sql-ai-chatbot-langchain/blob/main/sql%203.png)
